@@ -67,7 +67,7 @@ class Document(object):
         return list(map(lambda texts: Line(texts), line_texts))
     
     def parseTables(self):
-        return list(filter(lambda t: t is not None, map(lambda i: Table.parseFromLines(self.lines[i:]), range(len(self.lines)))))
+        return list(filter(lambda t: t is not None, map(lambda i: Table.findInLines(self.lines[i:]), range(len(self.lines)))))
 
     def dump(self, lines=True, tables=True):
         dumps = []

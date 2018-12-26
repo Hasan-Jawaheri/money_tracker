@@ -7,18 +7,7 @@ import copy
 class DebitCardTable(Table):
     @staticmethod
     def parseFromLines(lines):
-        if len(lines) > 0:
-            if list(map(lambda t: t.string.lower(), lines[0].texts)) == ["date", "description", "debit", "credit", "balance"]:
-                template = lines[0]
-                rows = []
-                for line in lines[1:]:
-                    row = Row.fromLine(template, line)
-                    if row is None:
-                        break
-                    rows.append(row)
-                if len(rows) > 0:
-                    return DebitCardTable(template, rows)
-        return None
+        return Table.parseFromLines(lines, ["date", "description", "debit", "credit", "balance"], DebitCardTable)
         
     def __init__(self, template_line, rows):
         super().__init__(template_line, rows)

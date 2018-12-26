@@ -6,18 +6,7 @@ import copy
 class AccountTypeTable(Table):
     @staticmethod
     def parseFromLines(lines):
-        if len(lines) > 0:
-            if list(map(lambda t: t.string.lower(), lines[0].texts)) == ["account (iban)", "currency", "account type"]:
-                template = lines[0]
-                rows = []
-                for line in lines[1:]:
-                    row = Row.fromLine(template, line)
-                    if row is None:
-                        break
-                    rows.append(row)
-                if len(rows) > 0:
-                    return AccountTypeTable(template, rows)
-        return None
+        return Table.parseFromLines(lines, ["account (iban)", "currency", "account type"], AccountTypeTable)
         
     def __init__(self, template_line, rows):
         super().__init__(template_line, rows)
