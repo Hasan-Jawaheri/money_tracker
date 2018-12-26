@@ -98,11 +98,11 @@ class Table(object):
             for col in range(len(row_texts)):
                 text = row_texts[col]
                 if '\n' in text:
-                    extra_lines = "\n" + "".join(list(map(lambda line: "{}{}\n".format(" " * (sum(column_text_lengths[0:col])), line), text.split('\n')[1:])))
+                    extra_lines = "".join(list(map(lambda line: "\n{}{}".format(" " * (sum(column_text_lengths[0:col])), line), text.split('\n')[1:])))
                     text = text[:text.find('\n')]
                 dump += "{}{}".format(text, " " * (column_text_lengths[col] - len(text)))
-            dump += extra_lines + "\n\n"
-        return dump
+            dump += extra_lines + "\n"
+        return dump.strip()
 
 class DebitCardTable(Table):
     @staticmethod
@@ -122,7 +122,10 @@ class DebitCardTable(Table):
         
     def __init__(self, template_line, rows):
         super().__init__(template_line, rows)
+        self.opening_balance = 0
+        self.closing_balance = 0
         self.mergeDescriptionRows()
+        self.validate()
     
     # rows that are only description should merge with the row before
     def mergeDescriptionRows(self):
@@ -130,11 +133,33 @@ class DebitCardTable(Table):
             if r > 0 and self.rows[r].description != None and len(list(filter(lambda col: col is not None, self.rows[r].field_texts))) == 1:
                 self.rows[r-1].description.string += "\n" + self.rows[r].description.string
                 del self.rows[r]
+    
+    def validate(self):
+        if len(self.rows) < 3:
+            return False
+
+        try:
+            self.opening_balance = float(self.rows[0].balance)
+            self.closing_balance = float(self.rows[-1].balance)
+        except:
+            return False
+        
+        cur_balance = self.opening_balance
+        for row in self.rows:
+            try: cur_balance += float(row.debit)
+            except: pass
+            try: cur_balance += float(row.credit)
+            except: pass
+        
+        if abs(cur_balance - self.closing_balance) > 0.1:
+            return False
+
+        return True
 
 class Document(object):
     def __init__(self, filename, texts_json):
         self.filename = filename
-        self.texts = self.fixTexts(texts_json)
+        self.texts = self.fixTexts(json.loads(json.dumps(texts_json)))
         self.lines = self.buildLines()
         self.tables = self.parseTables()
     
@@ -193,8 +218,11 @@ if __name__ == "__main__":
         for filename in loaded_messages[messageId]['texts'].keys():
             documents.append(Document(filename, loaded_messages[messageId]['texts'][filename]))
             if "ACCOUNT STATEMENT" in documents[-1].filename:
-                print (documents[-1].dump(lines=False, tables=True))
-                asd = asdd
+                if len(documents[-1].tables) > 0 and not documents[-1].tables[0].validate():
+                    print ("{} is invalid".format(documents[-1].filename))
+                    print (documents[-1].dump(lines=False, tables=True))
+                else:
+                    print ("{} is good".format(documents[-1].filename))
         
     with open('attachments/loaded.json', 'w') as F:
         json.dump(loaded_messages, F)
