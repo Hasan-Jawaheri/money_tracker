@@ -68,7 +68,7 @@ class Table(object):
     def findInLines(lines):
         import extraction.account_tables as account_tables
         TABLE_TYPES = [
-            account_tables.debit_card.DebitCardTable,
+            account_tables.account_summary.AccountSummaryTable,
             account_tables.account_type.AccountTypeTable,
         ]
 

@@ -1,5 +1,5 @@
 from extraction.documents import Document
-from extraction.account_tables import AccountTypeTable, DebitCardTable
+from extraction.account_tables import AccountTypeTable, AccountSummaryTable
 
 class AccountsSummaryDocument(Document):
     def __init__(self, *args, **kwargs):
@@ -17,7 +17,7 @@ class AccountsSummaryDocument(Document):
             t1 = self.tables[i]
             t2 = self.tables[i+1]
 
-            if not isinstance(t1, AccountTypeTable) or not isinstance(t2, DebitCardTable):
+            if not isinstance(t1, AccountTypeTable) or not isinstance(t2, AccountSummaryTable):
                 return False
         
         return True
