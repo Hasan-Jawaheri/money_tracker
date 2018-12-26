@@ -44,6 +44,7 @@ class DebitCardTable(Table):
             self.opening_balance = float(self.rows[0].balance.string.replace(',', ''))
             self.closing_balance = float(self.rows[-1].balance.string.replace(',', ''))
         except Exception as e:
+            print(e)
             return False
         
         cur_balance = self.opening_balance
@@ -59,9 +60,11 @@ class DebitCardTable(Table):
                         self.transactions.append(Transaction(date=date, delta=float(row.credit.string.replace(',', '')), desc=row.description.string))
                         cur_balance += self.transactions[-1].delta
                 except Exception as e:
+                    print (e)
                     return False
         
         if abs(cur_balance - self.closing_balance) > 0.1:
+            print (cur_balance, self.closing_balance)
             return False
 
         return True

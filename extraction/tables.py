@@ -44,6 +44,8 @@ class Row(object):
     def __getattr__(self, name):
         return self.attributes[name]
     def __getitem__(self, key):
+        if isinstance(key, str):
+            return self.attributes[key]
         return self.field_texts[key]
 
 class Table(object):
@@ -52,6 +54,7 @@ class Table(object):
         import extraction.account_tables as account_tables
         TABLE_TYPES = [
             account_tables.debit_card.DebitCardTable,
+            account_tables.account_type.AccountTypeTable,
         ]
 
         for TT in TABLE_TYPES:
@@ -63,6 +66,9 @@ class Table(object):
     def __init__(self, template_line, rows):
         self.template_line = template_line
         self.rows = rows
+    
+    def validate(self):
+        return True
     
     def dump(self):
         len_no_nl = lambda s: len(s) if '\n' not in s else max(map(lambda ss: len(ss), s.split("\n")))

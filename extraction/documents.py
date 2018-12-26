@@ -79,6 +79,6 @@ class Document(object):
             dumps.append(dump)
 
         if tables:
-            dumps.append("\n".join(list(map(lambda T: T.dump(), self.tables))))
+            dumps.append("\n\n".join(list(map(lambda T: T.dump(), self.tables))))
 
-        return "\n".join(dumps)
+        return "\n\n".join(dumps)
