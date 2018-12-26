@@ -70,6 +70,8 @@ class Table(object):
         TABLE_TYPES = [
             account_tables.account_summary.AccountSummaryTable,
             account_tables.account_type.AccountTypeTable,
+            account_tables.credit_card.CreditCardTable,
+            account_tables.credit_card_type.CreditCardTypeTable,
         ]
 
         for TT in TABLE_TYPES:

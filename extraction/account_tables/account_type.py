@@ -23,11 +23,9 @@ class AccountTypeTable(Table):
     
     def validate(self):
         if len(self.rows) != 1:
-            print(len(self.rows))
             return False
         
         if not self.rows[0]['account (iban)'] or not self.rows[0]['currency'] or not self.rows[0]['account type']:
-            print(self.rows[0]['account (iban)'], self.rows[0]['currency'], self.rows[0]['account type'])
             return False
 
         return True
