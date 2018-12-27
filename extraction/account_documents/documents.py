@@ -1,4 +1,5 @@
 from extraction.tables import Table
+from extraction.hardcoded_filters.text_filters import TextFilters
 import json
 
 class Text(object):
@@ -53,18 +54,18 @@ class Document(object):
                 new_text = json.loads(json.dumps(texts[i]))
                 new_text['text'] = splitted_texts[num_lines-1-j]
                 new_text['bbox'] = [bbox[0], (bbox[1] - line_height*j), bbox[0] + (bbox[2]-bbox[0]) * (len(new_text['text'])/max_line_len), (bbox[1] - line_height*(j-1))]
-                new_texts.append(json.loads(json.dumps(new_text)))
+                new_texts += TextFilters.textSplitter(json.loads(json.dumps(new_text)))
         new_texts.sort(key=lambda t: t['page'] * 2000 + t['bbox'][1])
         return list(map(lambda T: Text(T), new_texts))
     
     def buildLines(self):
         line_texts = [[]]
         for text in self.texts:
-            if len(line_texts[-1]) > 0 and text.y > line_texts[-1][0].y + 7:
+            if len(line_texts[-1]) > 0 and (text.y > line_texts[-1][0].y + 7 or text.page > line_texts[-1][0].page):
                 line_texts.append([])
             line_texts[-1].append(text)
             
-        return list(map(lambda texts: Line(texts), line_texts))
+        return list(filter(lambda line: TextFilters.lineFilter(line), map(lambda texts: Line(texts), line_texts)))
     
     def parseTables(self):
         return list(filter(lambda t: t is not None, map(lambda i: Table.findInLines(self.lines[i:]), range(len(self.lines)))))

@@ -20,13 +20,13 @@ class Row(object):
                     cur_template_text = template_line.texts[i]
                     next_template_text = template_line.texts[i+1] if i < len(fields)-1 else None
                     dist = abs((text.x1 + text.x)/2 - (cur_template_text.x + cur_template_text.x1)/2)
-                    within_bounds = (not prev_template_text or text.x > prev_template_text.x1-10) and (not next_template_text or text.x1 < next_template_text.x+10)
+                    within_bounds = (not prev_template_text or text.x > prev_template_text.x1-4) and (not next_template_text or text.x1 < next_template_text.x+4)
                     some_overlap = (text.x <= cur_template_text.x and text.x1 >= cur_template_text.x) or (text.x <= cur_template_text.x1 and text.x1 >= cur_template_text.x1) or (text.x >= cur_template_text.x and text.x1 <= cur_template_text.x1)
                     if dist < lowest_dist and within_bounds and some_overlap:
                         lowest_dist = dist
                         closest_text = text
                         closest_index = i
-                if closest_text != None:
+                if closest_text != None and fields[closest_index] == None:
                     fields[closest_index] = Field(closest_text, "center")
                 else:
                     return None
@@ -72,6 +72,7 @@ class Table(object):
             account_tables.account_type.AccountTypeTable,
             account_tables.credit_card.CreditCardTable,
             account_tables.credit_card_type.CreditCardTypeTable,
+            account_tables.credit_card_summary.CreditCardSummaryTable
         ]
 
         for TT in TABLE_TYPES:
@@ -83,9 +84,13 @@ class Table(object):
     def __init__(self, template_line, rows):
         self.template_line = template_line
         self.rows = rows
+        self.trimRows()
     
     def validate(self):
         return True
+    
+    def trimRows(self):
+        pass
     
     def dump(self):
         len_no_nl = lambda s: len(s) if '\n' not in s else max(map(lambda ss: len(ss), s.split("\n")))
