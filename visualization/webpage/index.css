@@ -119,12 +119,6 @@ body {
     width: 100%;
 }
 
-#table-wrapper table * {
-}
-
-#table-body {
-}
-
 #table-wrapper table thead th .text {
     position: absolute;   
     top: -30px;
