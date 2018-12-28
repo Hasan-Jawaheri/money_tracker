@@ -106,6 +106,10 @@ body {
     font-weight: bold;
 }
 
+.table-responsive {
+    overflow-x: hidden;
+}
+
 #table-wrapper {
     position: relative;
 }
