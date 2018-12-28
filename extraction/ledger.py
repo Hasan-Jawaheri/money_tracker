@@ -33,17 +33,18 @@ class Ledger(object):
                     duplicate = dup_tx
                     break
             if not duplicate:
-                new_transactions.append(Transaction(date=tx.date, delta=tx.delta, desc=tx.desc, ledger=self))
+                new_transactions.append(Transaction(date=tx.date, delta=tx.delta, desc=tx.desc, ledger=self, document=ledger.documents[0]))
         self.transactions += new_transactions
         self.transactions.sort(key=lambda tx: tx.date)
         self.closing_balance = self.opening_balance + reduce(lambda a, b: a + b, map(lambda t: t.delta, self.transactions), 0)
+        self.documents += ledger.documents
     
     def dump(self):
         return("[{}][{}][{} -> {}] {} transactions in {}".format(self.name, self.start_date, self.opening_balance, self.closing_balance, len(self.transactions), list(map(lambda doc: doc.filename, self.documents))))
     
     def toJSON(self):
         return {
-            "documents": self.documents,
+            "documents": list(map(lambda doc: doc.filename, self.documents)),
             "name": self.name,
             "transactions": list(map(lambda tx: tx.toJSON(), self.transactions)),
             "opening_balance": self.opening_balance,
