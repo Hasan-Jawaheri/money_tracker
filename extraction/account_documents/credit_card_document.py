@@ -19,7 +19,7 @@ class CreditCardDocument(Document):
             return False
         
         if len(t3.transactions) > 0:
-            self.ledgers = [Ledger(self, name="credit card", opening_balance=t3.opening_balance, transactions=t3.transactions)]
+            self.ledgers = [Ledger(self, name="CREDIT CARD", opening_balance=t3.opening_balance, transactions=t3.transactions)]
         else:
             self.ledgers = []
     

@@ -1,6 +1,7 @@
 from extraction.transactions import Transaction
 from functools import reduce
 import re
+import json
 
 class Ledger(object):
     def __init__(self, document, name, opening_balance, transactions, start_date=None):
@@ -39,3 +40,13 @@ class Ledger(object):
     
     def dump(self):
         return("[{}][{}][{} -> {}] {} transactions in {}".format(self.name, self.start_date, self.opening_balance, self.closing_balance, len(self.transactions), list(map(lambda doc: doc.filename, self.documents))))
+    
+    def toJSON(self):
+        return {
+            "documents": self.documents,
+            "name": self.name,
+            "transactions": list(map(lambda tx: tx.toJSON(), self.transactions)),
+            "opening_balance": self.opening_balance,
+            "closing_balance": self.closing_balance,
+            "start_date": self.start_date.isoformat(),
+        }

@@ -1,5 +1,8 @@
 from extraction.ledger import Ledger
 from functools import reduce
+import webbrowser
+import os
+import json
 
 class Plotter:
     @staticmethod
@@ -24,6 +27,13 @@ class Plotter:
             for ledger in account_to_ledgers[account_name]:
                 combined_ledger.mergeWith(ledger)
 
-            account_to_combined_ledger[account_name] = combined_ledger
+            account_to_combined_ledger[account_name] = combined_ledger.toJSON()
             print ("{}".format(combined_ledger.dump()))
-            
+        
+        this_file_path = os.path.dirname(os.path.realpath(__file__))
+        with open(os.path.join(this_file_path, "webpage/data.js"), "w") as F:
+            F.write("var __appdata = {};".format(json.dumps(account_to_combined_ledger)))
+        page_path = os.path.join(this_file_path, "webpage/index.html")
+        webbrowser.open(page_path, new=1)
+
+
