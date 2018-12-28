@@ -23,6 +23,7 @@ class CreditCardTable(Table):
                 return
     
     def validate(self):
+        self.transactions = []
         if len(self.rows) < 1:
             return False
         

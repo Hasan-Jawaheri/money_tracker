@@ -10,6 +10,7 @@ class AccountTypeTable(Table):
         
     def __init__(self, template_line, rows):
         super().__init__(template_line, rows)
+        self.account_type = ""
         self.mergeIBANRows()
         self.validate()
     
@@ -27,6 +28,8 @@ class AccountTypeTable(Table):
         
         if not self.rows[0]['account (iban)'] or not self.rows[0]['currency'] or not self.rows[0]['account type']:
             return False
+            
+        self.account_type = self.rows[0]['account type']
 
         return True
 

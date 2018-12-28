@@ -1,5 +1,6 @@
 from extraction.account_documents import Document
 from extraction.account_tables import CreditCardTable, CreditCardTypeTable, CreditCardSummaryTable
+from extraction.ledger import Ledger
 
 class CreditCardDocument(Document):
     def validate(self):
@@ -16,5 +17,10 @@ class CreditCardDocument(Document):
             return False
         if abs(t1.closing_balance - t3.closing_balance) > 0.1:
             return False
+        
+        if len(t3.transactions) > 0:
+            self.ledgers = [Ledger(self, name="credit card", opening_balance=t3.opening_balance, transactions=t3.transactions)]
+        else:
+            self.ledgers = []
     
         return True

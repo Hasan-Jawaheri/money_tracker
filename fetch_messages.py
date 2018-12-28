@@ -35,15 +35,24 @@ messages = results.get('messages', [])
 if not messages:
     print('No messages found.')
 else:
+    cur_msg = 0
     for message in messages:
+        cur_msg += 1
         if message['id'] in loaded_messages:
+            print ("[{}/{}]: [{}] Already downloaded".format(cur_msg, len(messages), message['id']))
             continue
         try:
+            print ("[{}/{}]: [{}] downloading...".format(cur_msg, len(messages), message['id']))
             message = service.users().messages().get(userId='me', id=message['id']).execute()
+            new_loaded_message = {'files': []}
+            part_num = 0
             for part in message['payload']['parts']:
+                part_num += 1
+                print ("  [{}/{}]".format(part_num, len(message['payload']['parts'])))
                 if 'parts' in part:
                     for part in part['parts']:
                         if 'filename' in part and len(part['filename']) > 0:
+                            print ("    {}".format(part['filename']))
                             attachment = None
                             attachmentId = part['body']['attachmentId']
                             if 'data' in part['body']:
@@ -55,9 +64,8 @@ else:
                             f = open(path, 'wb')
                             f.write(file_data)
                             f.close()
-                            if message['id'] not in loaded_messages:
-                                loaded_messages[message['id']] = {'files': []}
-                            loaded_messages[message['id']]['files'].append(path)
+                            new_loaded_message.append(path)
+            loaded_messages[message['id']] =new_loaded_message
         except Exception as e:
             print ('An error occurred: %s' % e)
 

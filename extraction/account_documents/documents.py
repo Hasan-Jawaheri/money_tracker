@@ -35,6 +35,7 @@ class Document(object):
         self.texts = self.fixTexts(json.loads(json.dumps(texts_json)))
         self.lines = self.buildLines()
         self.tables = self.parseTables()
+        self.ledgers = []
     
     def fixTexts(self, texts):
         new_texts = []

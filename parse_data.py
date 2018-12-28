@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 
 from extraction.account_documents import AccountsSummaryDocument, CreditCardDocument
+from visualization import Plotter
 
 import json
 import os, sys
-
+from functools import reduce
 
 if __name__ == "__main__":
     try:
@@ -29,6 +30,8 @@ if __name__ == "__main__":
                 raise Exception("Parsing failure!")
             else:
                 print ("{} is good".format(documents[-1].filename))
-        
+                
+    Plotter.plot(reduce(lambda a, b: a + b, map(lambda doc: doc.ledgers, documents), []))
+    
     with open('attachments/loaded.json', 'w') as F:
         json.dump(loaded_messages, F)

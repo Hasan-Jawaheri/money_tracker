@@ -19,6 +19,11 @@ class AccountSummaryTable(Table):
     
     # rows that are only description should merge with the row before
     def mergeDescriptionRows(self):
+        if len(self.rows) >= 3 and self.rows[0].description.string.lower() == "opening balance" and self.rows[1].description != None and len(list(filter(lambda col: col is not None, self.rows[1].field_texts))) == 1 and len(list(filter(lambda col: col is not None, self.rows[2].field_texts))) >= 4:
+            # special case: "Opening balance" sometimes merges with what's below it incorrectly...
+            self.rows[2].description = copy.deepcopy(self.rows[2].description)
+            self.rows[2].description.string = self.rows[1].description.string + "\n" + self.rows[2].description.string
+            del self.rows[1]
         for r in reversed(range(len(self.rows))):
             if r > 0 and self.rows[r].description != None and len(list(filter(lambda col: col is not None, self.rows[r].field_texts))) == 1:
                 self.rows[r-1].description = copy.deepcopy(self.rows[r-1].description)
@@ -26,6 +31,7 @@ class AccountSummaryTable(Table):
                 del self.rows[r]
     
     def validate(self):
+        self.transactions = []
         if len(self.rows) < 2:
             return False
 
@@ -33,7 +39,6 @@ class AccountSummaryTable(Table):
             self.opening_balance = float(self.rows[0].balance.string.replace(',', ''))
             self.closing_balance = float(self.rows[-1].balance.string.replace(',', ''))
         except Exception as e:
-            print(e)
             return False
         
         cur_balance = self.opening_balance
@@ -53,7 +58,6 @@ class AccountSummaryTable(Table):
                     return False
         
         if abs(cur_balance - self.closing_balance) > 0.1:
-            print (cur_balance, self.closing_balance)
             return False
 
         return True
