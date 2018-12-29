@@ -93,8 +93,10 @@ function onRangeChanged(x0, x1) {
 function onTransactionClicked(txi) {
     if (SelectedTransactionIndex == txi)
         SelectedTransactionIndex = -1;
-    else
+    else {
         SelectedTransactionIndex = txi;
+        HighlightedTransactionIndices = [];
+    }
     
     if (SelectedTransactionIndex == -1) {
         document.getElementById("tx-table-container").className = "table-responsive col-md-12";

@@ -1,3 +1,4 @@
+from email_fetchers import EmailFetcherInterface
 from extraction import BANK_UTILITIES
 from googleapiclient.discovery import build
 from httplib2 import Http
@@ -7,11 +8,12 @@ import os
 import base64
 import json
 
-class GMailFetcher:
+class GMailFetcher(EmailFetcherInterface):
     NAME = "GMAIL"
     SCOPES = 'https://www.googleapis.com/auth/gmail.readonly'
     SERVICE = None
 
+    @staticmethod
     def initializeService(store='token.json', credentials='credentials.json'):
         # The file token.json stores the user's access and refresh tokens, and is
         # created automatically when the authorization flow completes for the first
@@ -23,6 +25,7 @@ class GMailFetcher:
             creds = tools.run_flow(flow, store)
         GMailFetcher.SERVICE = build('gmail', 'v1', http=creds.authorize(Http()))
     
+    @staticmethod
     def fetchEmails(query):
         if not GMailFetcher.SERVICE:
             GMailFetcher.initializeService()
@@ -30,6 +33,7 @@ class GMailFetcher:
         results = GMailFetcher.SERVICE.users().messages().list(userId='me', q=query).execute()
         return list(map(lambda message: message['id'], results.get('messages', [])))
     
+    @staticmethod
     def downloadAllAttachments(message_id, storage_folder='attachments'):
         if not GMailFetcher.SERVICE:
             GMailFetcher.initializeService()

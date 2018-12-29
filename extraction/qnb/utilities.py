@@ -1,7 +1,7 @@
-from extraction import Document, Table
+from extraction import BankUtilityInterface, Document, Table
 import inspect
 
-class QNBUtilities:
+class QNBUtilities(BankUtilityInterface):
     NAME = "QNB"
     EMAIL_SEARCH_QUERY = "qnb statement"
 
