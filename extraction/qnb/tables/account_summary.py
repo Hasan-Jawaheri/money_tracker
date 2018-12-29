@@ -4,10 +4,10 @@ import re
 import datetime
 import copy
 
-class AccountSummaryTable(Table):
+class QNBAccountSummaryTable(Table):
     @staticmethod
     def parseFromLines(lines):
-        return Table.parseFromLines(lines, ["date", "description", "debit", "credit", "balance"], AccountSummaryTable)
+        return Table.parseFromLines(lines, ["date", "description", "debit", "credit", "balance"], QNBAccountSummaryTable)
         
     def __init__(self, template_line, rows):
         super().__init__(template_line, rows)

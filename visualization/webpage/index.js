@@ -3,6 +3,7 @@ var DataPointsMap = {};
 var TransactionHistory = [];
 var HighlightedTransactionIndices = [];
 var CurrentZoomBounds = [];
+var SelectedTransactionIndex = -1;
 
 document.addEventListener('DOMContentLoaded', function() {
     AppData = __appdata;
@@ -58,16 +59,20 @@ document.addEventListener('DOMContentLoaded', function() {
     chart.render();
 
     updateTable();
+    onTransactionClicked(-1);
 }, false);
 
 function onDatapointClicked(dp) {
     HighlightedTransactionIndices = dp.transactions.map(tx => tx.indexInHistory);
+    if (SelectedTransactionIndex >= 0)
+        onTransactionClicked(SelectedTransactionIndex); // re-click will remove it
     updateTable();
 }
 
 function onRangeChanged(x0, x1) {
     console.log(x0, x1);
     CurrentZoomBounds = [];
+    HighlightedTransactionIndices = [];
     if (x0 && x1) {
         for (var i = 0; i < TransactionHistory.length; i++) {
             var tx = TransactionHistory[i];
@@ -77,14 +82,43 @@ function onRangeChanged(x0, x1) {
                 CurrentZoomBounds.push(Math.min(i+1, TransactionHistory.length));
         }
     }
+    if (SelectedTransactionIndex >= 0 && CurrentZoomBounds.length > 0) {
+        if (SelectedTransactionIndex < CurrentZoomBounds[0] || SelectedTransactionIndex >= CurrentZoomBounds[1])
+            onTransactionClicked(SelectedTransactionIndex); // re-click will remove it
+    }
+
     updateTable();
+}
+
+function onTransactionClicked(txi) {
+    if (SelectedTransactionIndex == txi)
+        SelectedTransactionIndex = -1;
+    else
+        SelectedTransactionIndex = txi;
+    
+    if (SelectedTransactionIndex == -1) {
+        document.getElementById("tx-table-container").className = "table-responsive col-md-12";
+        document.getElementById("tx-container").className = "";
+        document.getElementById("tx-container").style.display = "none";
+    } else {
+        document.getElementById("tx-table-container").className = "table-responsive col-md-8";
+        document.getElementById("tx-container").className = "col-md-4";
+        document.getElementById("tx-container").style.display = "block";
+
+        updateCurrentTransaction(txi);
+    }
+}
+
+function updateCurrentTransaction(txi) {
+    document.getElementById("tx-filename").innerHTML = TransactionHistory[txi].filename;
 }
 
 function updateTable() {
     tableBody = document.getElementById("table-body");
     newHTML = "";
 
-    scrolled = false;
+    var scrolled = false;
+    var scrollToId = "";
     if (CurrentZoomBounds.length == 0)
         CurrentZoomBounds = [0, TransactionHistory.length];
 
@@ -95,11 +129,11 @@ function updateTable() {
 
         if (trClass != "" && !scrolled) {
             scrolled = true;
-
+            scrollToId = "scoll-in-table";
         }
 
         newHTML += `
-            <tr class="` + trClass + `">
+            <tr id="` + scrollToId + `" class="` + trClass + `" onClick="onTransactionClicked(` + tx.indexInHistory + `)">
                 <td>` + tx.date.toDateString() + `</td>
                 <td>` + tx.account + `</td>
                 <td>` + tx.desc.split('\n').map(line => "<div>" + line + "</div>").reduce((a, b) => a + b, "") + `</td>
@@ -110,4 +144,7 @@ function updateTable() {
     });
 
     tableBody.innerHTML = newHTML;
+    // document.getElementById("table-scroll").scrollTop = scrollToId == "" ? 0 : document.getElementById(scrollToId).offsetTop;
+    if (scrollToId != "")
+        document.getElementById(scrollToId).scrollIntoView({behavior: 'smooth'});
 }

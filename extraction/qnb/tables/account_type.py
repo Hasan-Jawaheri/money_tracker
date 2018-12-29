@@ -3,10 +3,10 @@ import re
 import datetime
 import copy
 
-class AccountTypeTable(Table):
+class QNBAccountTypeTable(Table):
     @staticmethod
     def parseFromLines(lines):
-        return Table.parseFromLines(lines, ["account (iban)", "currency", "account type"], AccountTypeTable)
+        return Table.parseFromLines(lines, ["account (iban)", "currency", "account type"], QNBAccountTypeTable)
         
     def __init__(self, template_line, rows):
         super().__init__(template_line, rows)

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from extraction.account_documents import AccountsSummaryDocument, CreditCardDocument
+from extraction.qnb import QNBAccountsSummaryDocument, QNBCreditCardDocument
 from visualization import Plotter
 
 import json
@@ -18,9 +18,9 @@ if __name__ == "__main__":
     for messageId in loaded_messages.keys():
         for filename in loaded_messages[messageId]['texts'].keys():
             if "ACCOUNT STATEMENT" in filename:
-                documents.append(AccountsSummaryDocument(filename, loaded_messages[messageId]['texts'][filename]))
+                documents.append(QNBAccountsSummaryDocument(filename, loaded_messages[messageId]['texts'][filename]))
             elif "CREDIT CARD STATEMENT" in filename:
-                documents.append(CreditCardDocument(filename, loaded_messages[messageId]['texts'][filename]))
+                documents.append(QNBCreditCardDocument(filename, loaded_messages[messageId]['texts'][filename]))
             else:
                 continue
             

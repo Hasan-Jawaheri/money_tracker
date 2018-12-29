@@ -1,14 +1,14 @@
 import copy
 
-class TextFilters:
+class QNBTextFilters:
     TEXT_TO_SPLIT = {
         "Purchase Date Description & Reference": ["Purchase Date", "Description & Reference"]
     }
 
     @staticmethod
     def textSplitter(text):
-        if text['text'] in TextFilters.TEXT_TO_SPLIT:
-            new_strings = TextFilters.TEXT_TO_SPLIT[text['text']]
+        if text['text'] in QNBTextFilters.TEXT_TO_SPLIT:
+            new_strings = QNBTextFilters.TEXT_TO_SPLIT[text['text']]
             new_texts = []
             sizes = list(map(lambda s: len(s) / len(text['text']), new_strings))
             original_text_width = text['bbox'][2] - text['bbox'][0]

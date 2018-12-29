@@ -1,8 +1,8 @@
-from extraction.account_documents import Document
-from extraction.account_tables import CreditCardTable, CreditCardTypeTable, CreditCardSummaryTable
-from extraction.ledger import Ledger
+from extraction.qnb.documents import QNBDocument
+from extraction.qnb.tables import QNBCreditCardTable, QNBCreditCardTypeTable, QNBCreditCardSummaryTable
+from extraction.ledgers import Ledger
 
-class CreditCardDocument(Document):
+class QNBCreditCardDocument(QNBDocument):
     def validate(self):
         if len(self.tables) != 3:
             return False
@@ -11,7 +11,7 @@ class CreditCardDocument(Document):
         t2 = self.tables[1]
         t3 = self.tables[2]
 
-        if not isinstance(t1, CreditCardSummaryTable) or not isinstance(t2, CreditCardTypeTable) or not isinstance(t3, CreditCardTable):
+        if not isinstance(t1, QNBCreditCardSummaryTable) or not isinstance(t2, QNBCreditCardTypeTable) or not isinstance(t3, QNBCreditCardTable):
             return False
         if not t1.validate() or not t2.validate() or not t3.validate():
             return False

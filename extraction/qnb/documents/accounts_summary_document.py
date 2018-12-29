@@ -1,8 +1,8 @@
-from extraction.account_documents import Document
-from extraction.account_tables import AccountTypeTable, AccountSummaryTable
-from extraction.ledger import Ledger
+from extraction.qnb.documents import QNBDocument
+from extraction.qnb.tables import QNBAccountTypeTable, QNBAccountSummaryTable
+from extraction.ledgers import Ledger
 
-class AccountsSummaryDocument(Document):
+class QNBAccountsSummaryDocument(QNBDocument):
     def validate(self):
         if len(self.tables) % 2 != 0 or len(self.tables) == 0:
             return False
@@ -12,7 +12,7 @@ class AccountsSummaryDocument(Document):
             t1 = self.tables[i]
             t2 = self.tables[i+1]
 
-            if not isinstance(t1, AccountTypeTable) or not isinstance(t2, AccountSummaryTable):
+            if not isinstance(t1, QNBAccountTypeTable) or not isinstance(t2, QNBAccountSummaryTable):
                 return False
             if not t1.validate() or not t2.validate():
                 return False

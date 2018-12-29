@@ -1,4 +1,4 @@
-from extraction.ledger import Ledger
+from extraction.ledgers import Ledger
 from functools import reduce
 import webbrowser
 import os

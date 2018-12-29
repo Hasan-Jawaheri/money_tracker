@@ -4,10 +4,10 @@ import re
 import datetime
 import copy
 
-class CreditCardTable(Table):
+class QNBCreditCardTable(Table):
     @staticmethod
     def parseFromLines(lines):
-        return Table.parseFromLines(lines, ["post date", "purchase date", "description & reference", "foreign currency", "amount in qar"], CreditCardTable)
+        return Table.parseFromLines(lines, ["post date", "purchase date", "description & reference", "foreign currency", "amount in qar"], QNBCreditCardTable)
         
     def __init__(self, template_line, rows):
         super().__init__(template_line, rows)

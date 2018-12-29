@@ -3,10 +3,10 @@ import re
 import datetime
 import copy
 
-class CreditCardTypeTable(Table):
+class QNBCreditCardTypeTable(Table):
     @staticmethod
     def parseFromLines(lines):
-        return Table.parseFromLines(lines, ["card number", "card holder", "credit limit", "payment due", "due date"], CreditCardTypeTable)
+        return Table.parseFromLines(lines, ["card number", "card holder", "credit limit", "payment due", "due date"], QNBCreditCardTypeTable)
         
     def __init__(self, template_line, rows):
         super().__init__(template_line, rows)

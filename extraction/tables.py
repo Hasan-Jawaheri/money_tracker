@@ -66,13 +66,13 @@ class Table(object):
 
     @staticmethod
     def findInLines(lines):
-        import extraction.account_tables as account_tables
+        import extraction.qnb.tables as qnb_account_tables
         TABLE_TYPES = [
-            account_tables.account_summary.AccountSummaryTable,
-            account_tables.account_type.AccountTypeTable,
-            account_tables.credit_card.CreditCardTable,
-            account_tables.credit_card_type.CreditCardTypeTable,
-            account_tables.credit_card_summary.CreditCardSummaryTable
+            qnb_account_tables.QNBAccountSummaryTable,
+            qnb_account_tables.QNBAccountTypeTable,
+            qnb_account_tables.QNBCreditCardTable,
+            qnb_account_tables.QNBCreditCardTypeTable,
+            qnb_account_tables.QNBCreditCardSummaryTable
         ]
 
         for TT in TABLE_TYPES:

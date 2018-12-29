@@ -130,3 +130,12 @@ body {
     height: 30px;
     width: 100%;
 }
+
+#table-body > tr {
+    cursor: pointer;
+    user-select: none;
+}
+
+#table-body > tr:hover {
+    background-color: lightskyblue !important;
+}
