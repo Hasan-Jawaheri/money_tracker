@@ -10,10 +10,10 @@ import base64
 import json
 
 try:
-    with open('attachments/loaded.json') as F:
-        loaded_messages = json.load(F)
+    with open('attachments/loaded_statements.json') as F:
+        loaded_statements = json.load(F)
 except:
-    loaded_messages = {}
+    loaded_statements = {}
 
 # If modifying these scopes, delete the file token.json.
 SCOPES = 'https://www.googleapis.com/auth/gmail.readonly'
@@ -38,7 +38,7 @@ else:
     cur_msg = 0
     for message in messages:
         cur_msg += 1
-        if message['id'] in loaded_messages:
+        if message['id'] in loaded_statements:
             print ("[{}/{}]: [{}] Already downloaded".format(cur_msg, len(messages), message['id']))
             continue
         try:
@@ -65,10 +65,10 @@ else:
                             f.write(file_data)
                             f.close()
                             new_loaded_message.append(path)
-            loaded_messages[message['id']] =new_loaded_message
+            loaded_statements[message['id']] = new_loaded_message
         except Exception as e:
             print ('An error occurred: %s' % e)
 
-with open('attachments/loaded.json', 'w') as F:
-    json.dump(loaded_messages, F)
+with open('attachments/loaded_statements.json', 'w') as F:
+    json.dump(loaded_statements, F)
 

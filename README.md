@@ -8,6 +8,6 @@ This project uses python 3+
 - Run
 ```bash
 ./fetch_messages.py
-./mine_text.py
+./extract_texts.py
 ./parse_data.py
 ```

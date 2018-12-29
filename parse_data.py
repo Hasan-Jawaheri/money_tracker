@@ -9,18 +9,18 @@ from functools import reduce
 
 if __name__ == "__main__":
     try:
-        with open('attachments/loaded.json') as F:
-            loaded_messages = json.load(F)
+        with open('attachments/loaded_statements.json') as F:
+            loaded_statements = json.load(F)
     except:
-        loaded_messages = {}
+        loaded_statements = {}
 
     documents = []
-    for messageId in loaded_messages.keys():
-        for filename in loaded_messages[messageId]['texts'].keys():
+    for id in loaded_statements.keys():
+        for filename in loaded_statements[id]['texts'].keys():
             if "ACCOUNT STATEMENT" in filename:
-                documents.append(QNBAccountsSummaryDocument(filename, loaded_messages[messageId]['texts'][filename]))
+                documents.append(QNBAccountsSummaryDocument(filename, loaded_statements[id]['texts'][filename]))
             elif "CREDIT CARD STATEMENT" in filename:
-                documents.append(QNBCreditCardDocument(filename, loaded_messages[messageId]['texts'][filename]))
+                documents.append(QNBCreditCardDocument(filename, loaded_statements[id]['texts'][filename]))
             else:
                 continue
             
@@ -33,5 +33,5 @@ if __name__ == "__main__":
                 
     Plotter.plot(reduce(lambda a, b: a + b, map(lambda doc: doc.ledgers, documents), []))
     
-    with open('attachments/loaded.json', 'w') as F:
-        json.dump(loaded_messages, F)
+    with open('attachments/loaded_statements.json', 'w') as F:
+        json.dump(loaded_statements, F)

@@ -111,6 +111,9 @@ function onTransactionClicked(txi) {
 
 function updateCurrentTransaction(txi) {
     document.getElementById("tx-filename").innerHTML = TransactionHistory[txi].filename;
+    document.getElementById("tx-balances").innerHTML = "<ul>" + Object.keys(DataPointsMap[TransactionHistory[txi].date].currentTotalBalances).map(
+        account_name => "<li><span style=\"font-weight: bold\">" + account_name + ": </span>" + DataPointsMap[TransactionHistory[txi].date].currentTotalBalances[account_name] + "</li>"
+    ) + "</ul>";
 }
 
 function updateTable() {
