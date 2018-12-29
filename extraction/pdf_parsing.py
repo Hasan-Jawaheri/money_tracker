@@ -48,16 +48,12 @@ def extractTextsFromPFFFile(filename, decryption_pw=''):
         interpreter = PDFPageInterpreter(rsrcmgr, device)
 
         def parse_obj(lt_objs, page):
-
             # loop over the object list
             for obj in lt_objs:
                 obj.page_number = page
                 # if it's a textbox, print text and location
                 if isinstance(obj, pdfminer.layout.LTTextBoxHorizontal):
                     texts.append(obj)
-                    # print ("%6d, %6d, %s" % (obj.bbox[0], obj.bbox[1], obj.get_text().replace('\n', '_')))
-                    # print(obj.bbox)
-
                 # if it's a container, recurse
                 elif isinstance(obj, pdfminer.layout.LTFigure):
                     parse_obj(obj._objs, page)
@@ -65,7 +61,6 @@ def extractTextsFromPFFFile(filename, decryption_pw=''):
         # loop over all pages in the document
         page_num = 1
         for page in PDFPage.create_pages(document):
-
             # read the page into a layout object
             interpreter.process_page(page)
             layout = device.get_result()
