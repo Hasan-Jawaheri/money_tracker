@@ -31,7 +31,7 @@ class GMailFetcher:
         results = GMailFetcher.SERVICE.users().messages().list(userId='me', q=query).execute()
         return list(map(lambda message: message['id'], results.get('messages', [])))
     
-    def downloadAllAttachments(message_id, folder='attachments'):
+    def downloadAllAttachments(message_id, storage_folder='attachments'):
         if not GMailFetcher.SERVICE:
             GMailFetcher.initializeService()
 
@@ -53,7 +53,7 @@ class GMailFetcher:
                         else:
                             attachment = GMailFetcher.SERVICE.users().messages().attachments().get(userId='me', id=attachmentId, messageId=message_id).execute()
                         file_data = base64.urlsafe_b64decode(attachment['data'].encode('UTF-8'))
-                        path = os.path.join(folder, message_id + '_' + part['filename'])
+                        path = os.path.join(storage_folder, message_id + '_' + part['filename'])
                         f = open(path, 'wb')
                         f.write(file_data)
                         f.close()
@@ -77,7 +77,7 @@ if __name__ == "__main__":
             continue
         try:
             print ("[{}/{}]: [{}] downloading...".format(cur_msg, len(message_ids), message_id))
-            loaded_statements[message_id] = {"files": GMailFetcher.downloadAllAttachments(message_id)}
+            loaded_statements[message_id] = {"bank": "QNB", "files": GMailFetcher.downloadAllAttachments(message_id)}
         except Exception as e:
             print ('An error occurred: %s' % e)
 
