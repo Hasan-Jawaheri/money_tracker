@@ -63,23 +63,6 @@ class Table(object):
                 if len(rows) > 0:
                     return account_type(template, rows)
         return None
-
-    @staticmethod
-    def findInLines(lines):
-        import extraction.qnb.tables as qnb_account_tables
-        TABLE_TYPES = [
-            qnb_account_tables.QNBAccountSummaryTable,
-            qnb_account_tables.QNBAccountTypeTable,
-            qnb_account_tables.QNBCreditCardTable,
-            qnb_account_tables.QNBCreditCardTypeTable,
-            qnb_account_tables.QNBCreditCardSummaryTable
-        ]
-
-        for TT in TABLE_TYPES:
-            table = TT.parseFromLines(lines)
-            if table is not None:
-                return table
-        return None
     
     def __init__(self, template_line, rows):
         self.template_line = template_line

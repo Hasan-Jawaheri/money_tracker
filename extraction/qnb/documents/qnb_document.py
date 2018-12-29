@@ -1,6 +1,7 @@
 from extraction.documents import Text, Line, Document
 from extraction.tables import Table
 from extraction.qnb.filters import QNBTextFilters
+from extraction.qnb.utilities import findTableInLines
 import json
 
 class QNBDocument(Document):
@@ -28,4 +29,7 @@ class QNBDocument(Document):
                 new_texts += self.text_filters.textSplitter(json.loads(json.dumps(new_text)))
         new_texts.sort(key=lambda t: t['page'] * 2000 + t['bbox'][1])
         return list(map(lambda T: Text(T), new_texts))
+        
+    def parseTables(self):
+        return list(filter(lambda t: t is not None, map(lambda i: findTableInLines(self.lines[i:]), range(len(self.lines)))))
     

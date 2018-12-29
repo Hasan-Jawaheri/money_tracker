@@ -51,7 +51,7 @@ class Document(object):
         return list(filter(lambda line: self.text_filters.lineFilter(line), map(lambda texts: Line(texts), line_texts)))
     
     def parseTables(self):
-        return list(filter(lambda t: t is not None, map(lambda i: Table.findInLines(self.lines[i:]), range(len(self.lines)))))
+        return []
     
     def validate(self):
         return True
