@@ -20,12 +20,14 @@ if __name__ == "__main__":
 
     cur_msg = 1
     for id in loaded_statements.keys():
-        if not 'texts' in loaded_statements[id]:
+        if not 'texts' in loaded_statements[id] or not 'rects' in loaded_statements[id]:
             loaded_statements[id]['texts'] = {}
+            loaded_statements[id]['rects'] = {}
             for filename in loaded_statements[id]['files']:
-                texts = extractTextsFromPFFFile(filename, decryption_pw=decryption_pw)
+                texts, rects = extractTextsFromPFFFile(filename, decryption_pw=decryption_pw)
                 # now use texts to extract data
                 loaded_statements[id]['texts'][filename] = list(map(lambda t: {"text": t.get_text(), "bbox": t.bbox, "page": t.page_number, "font": t.fontname, "size": t.fontsize}, texts))
+                loaded_statements[id]['rects'][filename] = list(map(lambda r: {"bbox": r.bbox, "linewidth": r.linewidth, "page": r.page_number}, rects))
                 print ("Extracted file {}".format(filename))
             print ("Extracted PDF contents [{}/{}]: {}".format(cur_msg, len(loaded_statements), id))
         else:

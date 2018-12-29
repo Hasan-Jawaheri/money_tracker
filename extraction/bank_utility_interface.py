@@ -4,7 +4,7 @@ class BankUtilityInterface:
     EMAIL_SEARCH_QUERY = None
 
     @staticmethod
-    def createDocument(filename, texts):
+    def createDocument(filename, texts, rects):
         raise Exception("Unimplemented")
 
     @staticmethod

@@ -17,7 +17,7 @@ if __name__ == "__main__":
     documents = []
     for message_id in loaded_statements.keys():
         for filename in loaded_statements[message_id]['texts'].keys():
-            doc = BANK_UTILITIES[loaded_statements[message_id]["bank"]].createDocument(filename, loaded_statements[message_id]['texts'][filename])
+            doc = BANK_UTILITIES[loaded_statements[message_id]["bank"]].createDocument(filename, loaded_statements[message_id]['texts'][filename], loaded_statements[message_id]['rects'][filename])
             if doc == None:
                 print ("Cannot identify document: {}".format(filename))
                 continue

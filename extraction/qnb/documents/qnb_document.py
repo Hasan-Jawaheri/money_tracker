@@ -5,8 +5,8 @@ from extraction.qnb.utilities import QNBUtilities
 import json
 
 class QNBDocument(Document):
-    def __init__(self, filename, texts_json):
-        super().__init__(filename, texts_json, text_filters=QNBTextFilters)
+    def __init__(self, filename, texts_json, rects_json):
+        super().__init__(filename, texts_json, rects_json, text_filters=QNBTextFilters)
         
     def fixTexts(self, texts):
         new_texts = []

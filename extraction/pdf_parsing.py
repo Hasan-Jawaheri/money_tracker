@@ -12,6 +12,7 @@ import json
 
 def extractTextsFromPFFFile(filename, decryption_pw=''):
     texts = []
+    rects = []
     with open(filename, 'rb') as F:
         # Open a PDF file.
         fp = open(filename, 'rb')
@@ -66,6 +67,8 @@ def extractTextsFromPFFFile(filename, decryption_pw=''):
                 # if it's a textbox, print text and location
                 if isinstance(obj, pdfminer.layout.LTTextBoxHorizontal):
                     texts.append(obj_add_properties(obj))
+                elif isinstance(obj, pdfminer.layout.LTRect):
+                    rects.append(obj)
                 # if it's a container, recurse
                 elif isinstance(obj, pdfminer.layout.LTFigure):
                     parse_obj(obj._objs, page)
@@ -81,4 +84,4 @@ def extractTextsFromPFFFile(filename, decryption_pw=''):
             parse_obj(layout._objs, page_num)
             page_num += 1
 
-    return texts
+    return texts, rects

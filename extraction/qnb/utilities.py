@@ -6,12 +6,12 @@ class QNBUtilities(BankUtilityInterface):
     EMAIL_SEARCH_QUERY = "qnb statement"
 
     @staticmethod
-    def createDocument(filename, texts):
+    def createDocument(filename, texts, rects):
         import extraction.qnb.documents as qnb_documents
         DOCUMENT_TYPES = filter(lambda attr: inspect.isclass(attr) and issubclass(attr, Document) and attr != Document, map(lambda module_attr: getattr(qnb_documents, module_attr), dir(qnb_documents)))
 
         for DT in DOCUMENT_TYPES:
-            doc = DT(filename, texts)
+            doc = DT(filename, texts, rects)
             if doc.validate():
                 return doc
 
