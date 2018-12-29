@@ -107,6 +107,7 @@ function onTransactionClicked(txi) {
 
         updateCurrentTransaction(txi);
     }
+    updateTable();
 }
 
 function updateCurrentTransaction(txi) {
@@ -126,11 +127,13 @@ function updateTable() {
         CurrentZoomBounds = [0, TransactionHistory.length];
 
     TransactionHistory.slice(CurrentZoomBounds[0], CurrentZoomBounds[1]).forEach(tx => {
-        dp = DataPointsMap[tx.date]
-        trClass = HighlightedTransactionIndices.indexOf(tx.indexInHistory) >= 0 ? "tr-highlight" : "";
+        var dp = DataPointsMap[tx.date];
+        var isHighlighted = HighlightedTransactionIndices.indexOf(tx.indexInHistory) >= 0;
+        var isSelected = SelectedTransactionIndex == tx.indexInHistory;
+        trClass = isHighlighted || isSelected ? "tr-highlight" : "";
         deltaClass = tx.delta > 0 ? "delta-positive" : "delta-negative";
 
-        if (trClass != "" && !scrolled) {
+        if (isHighlighted && !scrolled) {
             scrolled = true;
             scrollToId = "scoll-in-table";
         }
