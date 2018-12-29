@@ -46,6 +46,18 @@ def extractTextsFromPFFFile(filename, decryption_pw=''):
 
         # Create a PDF interpreter object.
         interpreter = PDFPageInterpreter(rsrcmgr, device)
+    
+        # Adds extra properties to the obj (e.g. font size and name)
+        def obj_add_properties(obj):
+            obj.fontname = ""
+            obj.fontsize = 0
+            for o in obj._objs:
+                if isinstance(o,pdfminer.layout.LTTextLine):
+                    for c in  o._objs:
+                        if isinstance(c, pdfminer.layout.LTChar):
+                            obj.fontname = c.fontname
+                            obj.fontsize = c.size
+            return obj
 
         def parse_obj(lt_objs, page):
             # loop over the object list
@@ -53,7 +65,7 @@ def extractTextsFromPFFFile(filename, decryption_pw=''):
                 obj.page_number = page
                 # if it's a textbox, print text and location
                 if isinstance(obj, pdfminer.layout.LTTextBoxHorizontal):
-                    texts.append(obj)
+                    texts.append(obj_add_properties(obj))
                 # if it's a container, recurse
                 elif isinstance(obj, pdfminer.layout.LTFigure):
                     parse_obj(obj._objs, page)
