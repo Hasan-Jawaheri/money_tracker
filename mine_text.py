@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-from PyPDF2 import PdfFileReader
-
-
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfpage import PDFPage
@@ -31,25 +28,12 @@ except:
     with open('attachments/decryption_password.json', 'w') as F:
         json.dump({'password': decryption_pw}, F)
 
-cur_msg = 0
+cur_msg = 1
 for messageId in loaded_messages.keys():
     loaded_messages[messageId]['texts'] = {}
     for filename in loaded_messages[messageId]['files']:
         texts = []
         with open(filename, 'rb') as F:
-            # pdf = PdfFileReader(F)
-            # if pdf.decrypt('') == 0:
-            #     pdf.decrypt(decryption_pw)
-            # info = pdf.getDocumentInfo()
-            # number_of_pages = pdf.getNumPages()
-
-            # page = pdf.getPage(0)
-            # print(page)
-            # print('Page type: {}'.format(str(type(page))))
-
-            # text = page.extractText()
-            # print(text)
-
             # Open a PDF file.
             fp = open(filename, 'rb')
 
