@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from extraction.qnb import QNBAccountsSummaryDocument, QNBCreditCardDocument
+from extraction import BANK_UTILITIES
 from visualization import Plotter
 
 import json
@@ -13,23 +13,17 @@ if __name__ == "__main__":
             loaded_statements = json.load(F)
     except:
         loaded_statements = {}
-
+    
     documents = []
-    for id in loaded_statements.keys():
-        for filename in loaded_statements[id]['texts'].keys():
-            if "ACCOUNT STATEMENT" in filename:
-                documents.append(QNBAccountsSummaryDocument(filename, loaded_statements[id]['texts'][filename]))
-            elif "CREDIT CARD STATEMENT" in filename:
-                documents.append(QNBCreditCardDocument(filename, loaded_statements[id]['texts'][filename]))
-            else:
+    for message_id in loaded_statements.keys():
+        for filename in loaded_statements[message_id]['texts'].keys():
+            doc = BANK_UTILITIES[loaded_statements[message_id]["bank"]].createDocument(filename, loaded_statements[message_id]['texts'][filename])
+            if doc == None:
+                print ("Cannot identify document: {}".format(filename))
                 continue
-            
-            if not documents[-1].validate():
-                print ("{} is invalid".format(documents[-1].filename))
-                print (documents[-1].dump(lines=False, tables=True))
-                raise Exception("Parsing failure!")
-            else:
-                print ("{} is good".format(documents[-1].filename))
+
+            print ("Loaded {} as {}".format(filename, str(doc)))
+            documents.append(doc)
                 
     Plotter.plot(reduce(lambda a, b: a + b, map(lambda doc: doc.ledgers, documents), []))
     
