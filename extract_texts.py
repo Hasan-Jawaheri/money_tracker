@@ -20,7 +20,7 @@ if __name__ == "__main__":
 
     cur_msg = 1
     for id in loaded_statements.keys():
-        if not 'texts' in loaded_statements[id] or True:
+        if not 'texts' in loaded_statements[id]:
             loaded_statements[id]['texts'] = {}
             for filename in loaded_statements[id]['files']:
                 texts = extractTextsFromPFFFile(filename, decryption_pw=decryption_pw)

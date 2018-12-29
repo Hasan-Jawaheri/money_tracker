@@ -12,6 +12,8 @@ class Text(object):
         self.width = self.x1 - self.x
         self.height = self.y1 - self.y
         self.page = json_obj['page']
+        self.font = json_obj['font']
+        self.font_size = json_obj['size']
     
     def __unicode__(self):
         return self.string
